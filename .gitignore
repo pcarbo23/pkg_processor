@@ -123,3 +123,9 @@ coverage.xml
 # If application data directory or scratch spaces are overridden locally:
 # .antigravity/
 # agy_data/
+
+# ------------------------------------------------------------------------------
+# 9. Local test assets and regression test files
+# ------------------------------------------------------------------------------
+tests/
+
