@@ -14,9 +14,8 @@ from pathlib import Path
 from lxml import etree
 
 class PackageProcessor:
-    def __init__(self, pkg_zip_path, output_dir=None, decoder_path="decAmrWbp", keep=False):
+    def __init__(self, pkg_zip_path, output_dir=None, keep=False):
         self.pkg_zip_path = os.path.abspath(pkg_zip_path)
-        self.decoder_path = decoder_path
         self.keep = keep
         
         # Get prodID from the zip filename (e.g., DB12345.pkg.zip -> DB12345)
