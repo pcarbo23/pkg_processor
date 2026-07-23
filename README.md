@@ -21,7 +21,6 @@ pkg-processor <path-to-pkg.zip> [options]
 ### Options
 
 *   `-o, --output-dir`: Directory where the output master.zip will be saved.
-*   `-d, --decoder`: Path to the AMR-WB+ decoder binary (default: `decAmrWbp`).
 *   `-k, --keep`: Preserve the fully converted DTB folder structure directly under `{output_dir}/{prodID}` (useful for manual testing/inspection).
 
 ## AMR-WB+ Decoder Notice
