@@ -624,6 +624,65 @@ class TestPackageProcessor(unittest.TestCase):
         self.assertEqual(doc_author_audio[0].get('clipBegin'), "0:00:03.172")
         self.assertEqual(doc_author_audio[0].get('clipEnd'), "0:00:05.272")
 
+    @patch('platform.system', return_value='Darwin')
+    def test_processor_darwin_missing_library_raises_runtime_error(self, mock_platform):
+        dtb_dir = os.path.join(self.test_dir, "dtb_src_darwin_missing")
+        os.makedirs(dtb_dir)
+        
+        with open(os.path.join(dtb_dir, "DB44444.opf"), "w", encoding="utf-8") as f:
+            f.write('<package><metadata><meta name="dtb:audioFormat" content="3gpp"/></metadata><manifest><item id="audio1" href="DB44444-0001.3gp" media-type="audio/3gpp"/><item id="opf" href="DB44444.opf" media-type="text/xml"/><item id="ncx" href="DB44444.ncx" media-type="application/x-dtbncx+xml"/></manifest><spine/></package>')
+        with open(os.path.join(dtb_dir, "DB44444.ncx"), "w", encoding="utf-8") as f:
+            f.write("<ncx></ncx>")
+        with open(os.path.join(dtb_dir, "DB44444-0001.3gp"), "w") as f:
+            f.write("dummy 3gp content")
+            
+        dtb_zip_path = os.path.join(self.test_dir, "DB44444.dtb.zip")
+        with zipfile.ZipFile(dtb_zip_path, 'w') as z:
+            z.write(os.path.join(dtb_dir, "DB44444.opf"), "DB44444.opf")
+            z.write(os.path.join(dtb_dir, "DB44444.ncx"), "DB44444.ncx")
+            z.write(os.path.join(dtb_dir, "DB44444-0001.3gp"), "DB44444-0001.3gp")
+            
+        pkg_zip_path = os.path.join(self.test_dir, "DB44444.pkg.zip")
+        with zipfile.ZipFile(pkg_zip_path, 'w') as z:
+            z.write(dtb_zip_path, "DB44444.dtb.zip")
+            
+        processor = PackageProcessor(pkg_zip_path, output_dir=self.test_dir)
+        
+        # Explicitly make exists return False
+        with patch('pathlib.Path.exists', return_value=False):
+            with self.assertRaises(RuntimeError) as context:
+                processor.process()
+            self.assertIn("Contact NLS/PICS Admin for assistance", str(context.exception))
+
+    @patch('platform.system', return_value='Linux')
+    def test_processor_linux_missing_binary_raises_runtime_error(self, mock_platform):
+        dtb_dir = os.path.join(self.test_dir, "dtb_src_linux_missing")
+        os.makedirs(dtb_dir)
+        
+        with open(os.path.join(dtb_dir, "DB55555.opf"), "w", encoding="utf-8") as f:
+            f.write('<package><metadata><meta name="dtb:audioFormat" content="3gpp"/></metadata><manifest><item id="audio1" href="DB55555-0001.3gp" media-type="audio/3gpp"/><item id="opf" href="DB55555.opf" media-type="text/xml"/><item id="ncx" href="DB55555.ncx" media-type="application/x-dtbncx+xml"/></manifest><spine/></package>')
+        with open(os.path.join(dtb_dir, "DB55555.ncx"), "w", encoding="utf-8") as f:
+            f.write("<ncx></ncx>")
+        with open(os.path.join(dtb_dir, "DB55555-0001.3gp"), "w") as f:
+            f.write("dummy 3gp content")
+            
+        dtb_zip_path = os.path.join(self.test_dir, "DB55555.dtb.zip")
+        with zipfile.ZipFile(dtb_zip_path, 'w') as z:
+            z.write(os.path.join(dtb_dir, "DB55555.opf"), "DB55555.opf")
+            z.write(os.path.join(dtb_dir, "DB55555.ncx"), "DB55555.ncx")
+            z.write(os.path.join(dtb_dir, "DB55555-0001.3gp"), "DB55555-0001.3gp")
+            
+        pkg_zip_path = os.path.join(self.test_dir, "DB55555.pkg.zip")
+        with zipfile.ZipFile(pkg_zip_path, 'w') as z:
+            z.write(dtb_zip_path, "DB55555.dtb.zip")
+            
+        processor = PackageProcessor(pkg_zip_path, output_dir=self.test_dir)
+        
+        # Explicitly make exists return False
+        with patch('pathlib.Path.exists', return_value=False):
+            with self.assertRaises(RuntimeError) as context:
+                processor.process()
+            self.assertIn("Contact NLS/PICS Admin for assistance", str(context.exception))
+
 if __name__ == '__main__':
     unittest.main()
-

@@ -205,7 +205,7 @@ class PackageProcessor:
             if os_type == 'Darwin':
                 lib_path = lib_dir / "libamr_bridge.dylib"
                 if not lib_path.exists():
-                    raise RuntimeError(f"AMR-WB+ decoder library not found at {lib_path}")
+                    raise RuntimeError(f"AMR-WB+ decoder library not found at {lib_path}. Contact NLS/PICS Admin for assistance.")
                 try:
                     bridge = ctypes.CDLL(str(lib_path))
                     bridge.convert_3gp_to_wav.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
@@ -222,7 +222,7 @@ class PackageProcessor:
             elif os_type == 'Linux':
                 binary_path = lib_dir / "amr-dec"
                 if not binary_path.exists():
-                    raise RuntimeError(f"AMR-WB+ decoder binary not found at {binary_path}")
+                    raise RuntimeError(f"AMR-WB+ decoder binary not found at {binary_path}. Contact NLS/PICS Admin for assistance.")
                 try:
                     subprocess.run(
                         [str(binary_path), '-fs', '41000', '-if', str(gp_file), '-of', str(wav_path)],
