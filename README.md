@@ -1,6 +1,6 @@
 # PICS Package Process (`pkg_processor`)
 
-A Python tool to process 1206:2025 compliant talking book packages and convert them to Z39.86-2002 compliant DTBs.
+A Python tool to process 1206:2025 compliant deliverables and convert them to Master Wav DTBs (i.e. Universal/Agnostic).
 
 ## Installation
 
